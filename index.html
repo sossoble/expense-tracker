@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Tracker</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
+    input { margin: 5px 0; padding: 8px; width: 100%; }
+    button { padding: 10px 15px; margin-top: 10px; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin: 5px 0; display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+  <h2>Personal Expense Tracker</h2>
+
+  <!-- Form -->
+  <input type="text" id="expenseName" placeholder="Expense Name (e.g., Groceries)">
+  <input type="number" id="expenseAmount" placeholder="Amount (e.g., 500)">
+  <button onclick="addExpense()">Add Expense</button>
+
+  <!-- Display List -->
+  <h3>Expenses:</h3>
+  <ul id="expenseList"></ul>
+
+  <!-- Display Total -->
+  <h3>Total: KES <span id="totalAmount">0</span></h3>
+
+  <script>
+    // Global array to store expenses
+    let expenses = [];
+
+    // Function to add a new expense
+    function addExpense() {
+      const nameInput = document.getElementById("expenseName");
+      const amountInput = document.getElementById("expenseAmount");
+
+      const name = nameInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+
+      // Input validation
+      if (name === "" || isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid name and a positive amount.");
+        return;
+      }
+
+      // Create expense object and store it
+      const expense = { name, amount };
+      expenses.push(expense);
+
+      // Clear input fields
+      nameInput.value = "";
+      amountInput.value = "";
+
+      updateDisplay();
+    }
+
+    // Function to update the displayed expense list and total
+    function updateDisplay() {
+      const list = document.getElementById("expenseList");
+      const totalEl = document.getElementById("totalAmount");
+      list.innerHTML = ""; // Clear previous list
+
+      let total = 0;
+
+      // Loop through and display each expense
+      expenses.forEach((expense, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${expense.name}: KES ${expense.amount.toLocaleString()}
+          <button onclick="deleteExpense(${index})">Delete</button>
+        `;
+        list.appendChild(li);
+        total += expense.amount;
+      });
+
+      // Display total
+      totalEl.textContent = total.toLocaleString();
+    }
+
+    // Function to delete an expense by index
+    function deleteExpense(index) {
+      expenses.splice(index, 1);
+      updateDisplay();
+    }
+  </script>
+
+</body>
+</html>
